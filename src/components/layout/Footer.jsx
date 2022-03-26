@@ -5,12 +5,14 @@ const Footer = () => {
   return (
     <footer className="py-1">
       <p className="text-center mt-1">
-        Jobbee - 2021-2022, All Rights Reserved
+        <span className="mr-4">
+          Jobbee - 2021-2022, All Rights Reserved
+        </span>
         <Link
-          className="ml-4"
           rel="noreferrer"
           target="_blank"
-          to="https://storyset.com/people"
+          passHref
+          href="https://storyset.com/people"
         >
           People illustrations by Storyset
         </Link>
