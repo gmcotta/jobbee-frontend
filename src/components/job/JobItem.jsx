@@ -4,7 +4,7 @@ import moment from 'moment';
 
 const JobItem = ({ job }) => {
   return (
-    <Link passHref href={`/job/${job.id}`}>
+    <Link passHref href={`/jobs/${job.id}`}>
       <a className="job-listing">
         <div className="job-listing-details">
           <div className="job-listing-description">
