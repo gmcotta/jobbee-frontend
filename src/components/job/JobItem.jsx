@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
-import moment from 'moment';
+import { convertISODateToDateFromNow } from '../../utils/dateUtils';
+
 
 const JobItem = ({ job }) => {
   return (
@@ -32,7 +33,7 @@ const JobItem = ({ job }) => {
             </li>
             <li>
               <i aria-hidden className="far fa-clock"></i> 
-              {moment.utc(job.createdAt).local().startOf('seconds').fromNow()}
+              {convertISODateToDateFromNow(job.createdAt)}
             </li>
           </ul>
         </div>
