@@ -1,7 +1,28 @@
-import React from 'react';
-import { convertISODateToDateFromNow, convertISODateToDDMMYYYY, isLastDateLessThanNow } from '../../utils/dateUtils';
+import React, { useEffect } from 'react';
+import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
+
+import { 
+  convertISODateToDateFromNow, 
+  convertISODateToDDMMYYYY, 
+  isLastDateLessThanNow 
+} from '../../utils/dateUtils';
+
+mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
+const MAP_ID = 'job-map';
 
 const JobDetails = ({ job, candidates }) => {
+  useEffect(() => {
+    const coordinates = job.point.split('(')[1].replace(')', '');
+    const [lat,lng] = coordinates.split(' ');
+    const map = new mapboxgl.Map({
+      container: MAP_ID,
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [lat, lng],
+      zoom: 10.5
+    });
+    new mapboxgl.Marker().setLngLat([lat,lng]).addTo(map);
+  }, [job]);
+
   return (
     <div className="job-details-wrapper">
       <div className="container container-fluid">
@@ -87,6 +108,7 @@ const JobDetails = ({ job, candidates }) => {
 
               <div className="job-location">
                 <h4 className="mt-5 mb-4">Job Location</h4>
+                <div id={MAP_ID} style={{ height: 520, width: '100%'}}></div>
               </div>
             </div>
           </div>
@@ -117,7 +139,6 @@ const JobDetails = ({ job, candidates }) => {
                 </div>
               )
             }
-            
           </div>
         </div>
       </div>
