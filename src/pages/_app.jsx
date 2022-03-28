@@ -1,10 +1,11 @@
 import Script from 'next/script';
+import { AuthProvider } from '../contexts/AuthContext';
 
 import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }) {
   return (
-    <>
+    <AuthProvider>
       <link
           rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -32,7 +33,7 @@ function MyApp({ Component, pageProps }) {
         src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
       ></Script>
       <Component {...pageProps} />
-    </>
+    </AuthProvider>
   )
 }
 
