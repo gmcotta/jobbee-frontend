@@ -74,7 +74,7 @@ export const AuthProvider = ({ children }) => {
           email,
           password
         });
-      if (res.data.username) {
+      if (res.data.message) {
         setLoading(false);
         router.push('/login');
       }
@@ -84,9 +84,22 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  const clearErrors = () => {
+    setError(null)
+  }
+
   return (
     <AuthContext.Provider
-      value={{ loading, user, error, isAuthenticated, login, logout, register }}
+      value={{ 
+        loading, 
+        user, 
+        error, 
+        isAuthenticated, 
+        login, 
+        logout, 
+        register, 
+        clearErrors 
+      }}
     >
       {children}
     </AuthContext.Provider>

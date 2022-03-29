@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 
@@ -9,12 +10,15 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
-  const { loading, error, isAuthenticated, login } = useAuth();
+  const { loading, error, isAuthenticated, login, clearErrors } = useAuth();
 
   useEffect(() => {
-    if (error) toast.error(error);
+    if (error) {
+      toast.error(error);
+      clearErrors();
+    };
     if (isAuthenticated && !loading) router.push('/');
-  }, [isAuthenticated, error, loading, router]);
+  }, [isAuthenticated, error, loading, router, clearErrors]);
 
   const submitHandler = async (evt) => {
     evt.preventDefault();
@@ -70,7 +74,7 @@ const Login = () => {
                 </button>
               </div>
               <p style={{ textDecoration: "none" }} className="signup">
-                New to Jobbee? <a href="/register">Create an account</a>
+                New to Jobbee? <Link passHref href="/register">Create an account</Link>
               </p>
             </form>
           </div>
