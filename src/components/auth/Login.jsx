@@ -8,7 +8,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
-  const { loading, error, isAuthenticated } = useAuth();
+  const { loading, error, isAuthenticated, login } = useAuth();
 
   useEffect(() => {
     if (error) console.log(error);
@@ -17,7 +17,7 @@ const Login = () => {
 
   const submitHandler = async (evt) => {
     evt.preventDefault();
-    console.log({ email, password });
+    await login({ username: email, password });
   }
 
   return (
