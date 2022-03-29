@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState(null);
   const [updated, setUpdated] = useState(false);
+  const [uploaded, setUploaded] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -68,7 +69,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       const res = await axios.post(
-        `${process.env.API_URL}/api/register/`, 
+        `${process.env.NEXT_PUBLIC_API_URL}/api/register/`, 
         { 
           first_name: firstName,
           last_name: lastName,
@@ -95,7 +96,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       const res = await axios.put(
-        `${process.env.API_URL}/api/me/update/`, 
+        `${process.env.NEXT_PUBLIC_API_URL}/api/me/update/`, 
         { 
           first_name: firstName,
           last_name: lastName,
@@ -119,6 +120,28 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  const uploadResume = async ({ formData, accessToken }) => {
+    try {
+      setLoading(true);
+      const res = await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/upload/resume/`, 
+        formData, 
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        }
+      );
+      if (res.data) {
+        setLoading(false);
+        setUploaded(true);
+      }
+    } catch (err) {
+      setLoading(false);
+      setError(err.response && err.response.data.detail || err.response.data.error);
+    }
+  }
+
   const clearErrors = () => {
     setError(null);
   }
@@ -126,17 +149,20 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider
       value={{ 
-        loading, 
-        user, 
-        error, 
+        loading,
+        user,
+        error,
         isAuthenticated,
         updated,
+        uploaded,
         setUpdated,
-        login, 
-        logout, 
-        register, 
+        setUploaded,
+        login,
+        logout,
+        register,
         clearErrors,
-        updateProfile
+        updateProfile,
+        uploadResume
       }}
     >
       {children}
