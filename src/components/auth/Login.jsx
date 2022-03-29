@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 
 import { useAuth } from '../../hooks/useAuth';
 
@@ -11,7 +12,7 @@ const Login = () => {
   const { loading, error, isAuthenticated, login } = useAuth();
 
   useEffect(() => {
-    if (error) console.log(error);
+    if (error) toast.error(error);
     if (isAuthenticated && !loading) router.push('/');
   }, [isAuthenticated, error, loading, router]);
 
