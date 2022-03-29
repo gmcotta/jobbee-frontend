@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
+import { toast } from 'react-toastify';
 
+import { useJob } from '../../hooks/useJob';
 import { 
   convertISODateToDateFromNow, 
   convertISODateToDDMMYYYY, 
@@ -10,7 +12,9 @@ import {
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 const MAP_ID = 'job-map';
 
-const JobDetails = ({ job, candidates }) => {
+const JobDetails = ({ job, candidates, accessToken }) => {
+  const { applyToJob, applied, clearErrors, error, loading } = useJob();
+
   useEffect(() => {
     const coordinates = job.point.split('(')[1].replace(')', '');
     const [lat,lng] = coordinates.split(' ');
@@ -22,6 +26,17 @@ const JobDetails = ({ job, candidates }) => {
     });
     new mapboxgl.Marker().setLngLat([lat,lng]).addTo(map);
   }, [job]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      clearErrors();
+    }
+  }, [error, clearErrors]);
+
+  const applyToJobHandler = () => {
+    applyToJob({ id: job.id, accessToken })
+  }
 
   return (
     <div className="job-details-wrapper">
@@ -41,10 +56,25 @@ const JobDetails = ({ job, candidates }) => {
                 </span>
 
                 <div className="mt-3">
+                  {loading ? ('Loading...') : (
+                    applied ? (
+                      <button 
+                        disabled 
+                        className="btn btn-primary px-4 py-2 apply-btn"
+                      >
+                        <i aria-hidden className="fas fa-check"></i>
+                        {loading ? 'Loading...' : 'Applied'}
+                      </button>
+                    ) : (
+                      <button 
+                        className="btn btn-primary px-4 py-2 apply-btn" 
+                        onClick={applyToJobHandler}
+                      >
+                        {loading ? 'Loading...' : 'Apply Now'}
+                      </button>
+                    )
+                  )}
                   <span>
-                    <button className="btn btn-primary px-4 py-2 apply-btn">
-                      Apply Now
-                    </button>
                     <span className="ml-4 text-success">
                       {candidates && (
                         <>
