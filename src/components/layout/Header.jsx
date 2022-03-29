@@ -4,7 +4,12 @@ import Image from 'next/image';
 import { useAuth } from '../../hooks/useAuth';
 
 const Header = () => {
-  const { loading, user } = useAuth();
+  const { loading, user, logout } = useAuth();
+
+  const logoutHandler = () => {
+    logout();
+  }
+
   return (
     <div className="navWrapper">
       <div className="navContainer">
@@ -56,7 +61,10 @@ const Header = () => {
                   </a>
                 </Link>
                 <Link passHref href="/">
-                  <a className="dropdown-item text-danger">
+                  <a 
+                    className="dropdown-item text-danger" 
+                    onClick={logoutHandler}
+                  >
                     Logout
                   </a>
                 </Link>
