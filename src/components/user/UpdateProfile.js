@@ -3,13 +3,23 @@ import Image from 'next/image';
 import { toast } from 'react-toastify';
 
 import { useAuth } from '../../hooks/useAuth';
+import { useRouter } from 'next/router';
 
-const UpdateProfile = () => {
+const UpdateProfile = ({ accessToken }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { loading, error, user, clearErrors } = useAuth();
+  const router = useRouter();
+  const { 
+    loading, 
+    error, 
+    user, 
+    updated,
+    setUpdated,
+    clearErrors, 
+    updateProfile 
+  } = useAuth();
 
   useEffect(() => {
     if (user) {
@@ -21,11 +31,18 @@ const UpdateProfile = () => {
       toast.error(error);
       clearErrors();
     };
-  }, [user, error, clearErrors]);
+    if (updated) {
+      setUpdated(false);
+      router.push('/me');
+    }
+  }, [user, error, clearErrors, updated, setUpdated, router]);
 
   const submitHandler = async (evt) => {
     evt.preventDefault();
-    await register({ firstName, lastName, email, password });
+    const isUpdateSuccess = await updateProfile(
+      { firstName, lastName, email, password, accessToken }
+    );
+    isUpdateSuccess && toast.success('Profile updated!');
   }
 
   return (
@@ -87,7 +104,6 @@ const UpdateProfile = () => {
                   <input
                     type="password"
                     placeholder="Enter Your Password"
-                    required
                     value={password}
                     minLength={6}
                     onChange={(evt) => setPassword(evt.target.value)}

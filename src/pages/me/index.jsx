@@ -3,10 +3,10 @@ import UpdateProfile from "../../components/user/UpdateProfile";
 
 import { isAuthenticated } from "../../utils/isAuthenticated";
 
-export default function UpdateProfilePage() {
+export default function UpdateProfilePage({ accessToken }) {
   return (
     <Layout title="Jobbee - Update User Profile">
-      <UpdateProfile />
+      <UpdateProfile accessToken={accessToken} />
     </Layout>
   );
 }
