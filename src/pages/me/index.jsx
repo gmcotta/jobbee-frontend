@@ -13,7 +13,6 @@ export default function UpdateProfilePage({ accessToken }) {
 
 export async function getServerSideProps({ req }) {
   const accessToken = req.cookies.access;
-  console.log({ accessToken });
   const user = await isAuthenticated(accessToken);
   if (!user) {
     return {
