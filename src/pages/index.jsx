@@ -30,7 +30,7 @@ export async function getServerSideProps({ query }) {
   minSalary && queryString.append('min_salary', minSalary);
   maxSalary && queryString.append('max_salary', maxSalary);
   const res = await axios.get(
-    `${process.env.API_URL}/api/jobs?${queryString.toString()}`
+    `${process.env.NEXT_PUBLIC_API_URL}/api/jobs?${queryString.toString()}`
   );
   const data = res.data;
 

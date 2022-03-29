@@ -18,7 +18,7 @@ export default function JobDetailsPage({ job, candidates, error }) {
 
 export async function getServerSideProps({ params }) {
   try {
-    const res = await axios.get(`${process.env.API_URL}/api/jobs/${params.id}/`);
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs/${params.id}/`);
     const job = res.data.job;
     const candidates = res.data.candidates;
     return {

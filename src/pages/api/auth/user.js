@@ -15,7 +15,7 @@ const User = async (req, res) => {
     }
     try {
       const response = await axios.get(
-        `${process.env.API_URL}/api/me/`, 
+        `${process.env.NEXT_PUBLIC_API_URL}/api/me/`, 
         {
           headers: {
             'Authorization': `Bearer ${access}`

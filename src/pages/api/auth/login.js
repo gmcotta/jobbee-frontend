@@ -8,7 +8,7 @@ const Login = async (req, res) => {
     const { username, password } = req.body;
     try {
       const response = await axios.post(
-        `${process.env.API_URL}/api/token/`, 
+        `${process.env.NEXT_PUBLIC_API_URL}/api/token/`, 
         {
         username, password
         },
