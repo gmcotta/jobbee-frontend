@@ -63,9 +63,30 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  const register = async ({ firstName, lastName, email, password }) => {
+    try {
+      setLoading(true);
+      const res = await axios.post(
+        `${process.env.API_URL}/api/register/`, 
+        { 
+          first_name: firstName,
+          last_name: lastName,
+          email,
+          password
+        });
+      if (res.data.username) {
+        setLoading(false);
+        router.push('/login');
+      }
+    } catch (err) {
+      setLoading(false);
+      setError(err.response && err.response.data.detail || err.response.data.error);
+    }
+  }
+
   return (
     <AuthContext.Provider
-      value={{ loading, user, error, isAuthenticated, login, logout }}
+      value={{ loading, user, error, isAuthenticated, login, logout, register }}
     >
       {children}
     </AuthContext.Provider>
