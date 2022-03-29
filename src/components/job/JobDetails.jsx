@@ -13,7 +13,14 @@ mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 const MAP_ID = 'job-map';
 
 const JobDetails = ({ job, candidates, accessToken }) => {
-  const { applyToJob, applied, clearErrors, error, loading } = useJob();
+  const { 
+    applyToJob, 
+    applied, 
+    clearErrors, 
+    error, 
+    loading, 
+    checkJobApplied 
+  } = useJob();
 
   useEffect(() => {
     const coordinates = job.point.split('(')[1].replace(')', '');
@@ -33,6 +40,11 @@ const JobDetails = ({ job, candidates, accessToken }) => {
       clearErrors();
     }
   }, [error, clearErrors]);
+
+  useEffect(() => {
+    checkJobApplied({ id: job.id, accessToken });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [job.id, accessToken]);
 
   const applyToJobHandler = () => {
     applyToJob({ id: job.id, accessToken })
@@ -60,7 +72,7 @@ const JobDetails = ({ job, candidates, accessToken }) => {
                     applied ? (
                       <button 
                         disabled 
-                        className="btn btn-primary px-4 py-2 apply-btn"
+                        className="btn btn-success px-4 py-2 apply-btn"
                       >
                         <i aria-hidden className="fas fa-check"></i>
                         {loading ? 'Loading...' : 'Applied'}
@@ -69,6 +81,7 @@ const JobDetails = ({ job, candidates, accessToken }) => {
                       <button 
                         className="btn btn-primary px-4 py-2 apply-btn" 
                         onClick={applyToJobHandler}
+                        disabled={isLastDateLessThanNow(job.lastDate)}
                       >
                         {loading ? 'Loading...' : 'Apply Now'}
                       </button>
@@ -76,10 +89,12 @@ const JobDetails = ({ job, candidates, accessToken }) => {
                   )}
                   <span>
                     <span className="ml-4 text-success">
-                      {candidates && (
+                      {!!candidates ? (
                         <>
                           <b>{candidates}</b> {candidates > 1 ? 'candidates' : 'candidate'} has applied to this job.
                         </>
+                      ) : (
+                        'No candidates have applied to this job.'
                       )}
                     </span>
                   </span>
