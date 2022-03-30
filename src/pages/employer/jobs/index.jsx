@@ -4,10 +4,10 @@ import MyJobs from "../../../components/job/MyJobs";
 import { isAuthenticated } from "../../../utils/isAuthenticated";
 import axios from "axios";
 
-export default function MyJobsPage({ jobs }) {
+export default function MyJobsPage({ jobs, accessToken }) {
   return (
     <Layout title="Jobbee - My Jobs">
-      <MyJobs jobs={jobs} />
+      <MyJobs jobs={jobs} accessToken={accessToken} />
     </Layout>
   );
 }
@@ -32,10 +32,10 @@ export async function getServerSideProps({ req }) {
     }
   );
   const jobs = res.data;
-  console.log(jobs);
   return {
     props: {
       jobs,
+      accessToken
     }
   }
 }

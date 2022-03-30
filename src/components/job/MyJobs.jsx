@@ -1,8 +1,38 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import DataTable from 'react-data-table-component';
 
-const MyJobs = ({ jobs }) => {
+import { useJob } from '../../hooks/useJob';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
+
+const MyJobs = ({ jobs, accessToken }) => {
+  const router = useRouter();
+  const { 
+    clearErrors, 
+    error, 
+    loading, 
+    deleted, 
+    setDeleted, 
+    deleteJob 
+  } = useJob();
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      clearErrors();
+    }
+
+    if (deleted) {
+      setDeleted(false);
+      router.push(router.asPath);
+    }
+  }, [clearErrors, error, deleted, setDeleted, router]);
+
+  const deleteJobHandler = (id) => {
+    deleteJob({ id, accessToken });
+  }
+
   const columns = [
     {
       name: 'Job ID',
@@ -26,6 +56,7 @@ const MyJobs = ({ jobs }) => {
     },
   ];
   const data = [];
+
   jobs && jobs.forEach(item => {
     data.push({
       id: item.id,
@@ -48,13 +79,17 @@ const MyJobs = ({ jobs }) => {
               <i aria-hidden className="fa fa-pencil"></i>
             </a>
           </Link>
-          <button className="btn btn-danger">
+          <button 
+            className="btn btn-danger" 
+            onClick={() => deleteJobHandler(item.id)}
+          >
             <i className="fa fa-trash"></i>
           </button>
         </>
       )
-    })
-  })
+    });
+  });
+
   return (
     <div className="row">
       <div className="col-2"></div>

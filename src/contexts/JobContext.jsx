@@ -1,5 +1,4 @@
-import React, { useState, useEffect, createContext } from 'react';
-import { useRouter } from 'next/router';
+import React, { useState, createContext } from 'react';
 import axios from 'axios';
 
 export const JobContext = createContext();
@@ -10,6 +9,7 @@ export const JobProvider = ({ children }) => {
   const [updated, setUpdated] = useState(false);
   const [applied, setApplied] = useState(false);
   const [created, setCreated] = useState(false);
+  const [deleted, setDeleted] = useState(false);
   const [stats, setStats] = useState(null);
 
   const clearErrors = () => {
@@ -115,23 +115,47 @@ export const JobProvider = ({ children }) => {
     }
   }
 
+  const deleteJob = async ({ id, accessToken }) => {
+    try {
+      setLoading(true);
+      const res = await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/jobs/${id}/delete/`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        }
+      );
+      if (res.data) {
+        setLoading(false);
+        setDeleted(true);
+      }
+    } catch (err) {
+      setLoading(false);
+      setError(err.response && err.response.data.detail || err.response.data.error);
+    }
+  }
+
   return (
     <JobContext.Provider
       value={{ 
         loading,
         error,
-        updated,
+        stats,
         applied,
         created,
-        stats,
+        updated,
+        deleted,
         setUpdated,
         setCreated,
+        setDeleted,
         clearErrors,
         applyToJob,
         checkJobApplied,
         getTopicStats,
         newJob,
-        updateJob
+        updateJob,
+        deleteJob
       }}
     >
       {children}
