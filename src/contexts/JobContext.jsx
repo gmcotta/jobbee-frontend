@@ -93,6 +93,28 @@ export const JobProvider = ({ children }) => {
     }
   }
 
+  const updateJob = async ({ id, data, accessToken }) => {
+    try {
+      setLoading(true);
+      const res = await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/jobs/${id}/update/`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        }
+      );
+      if (res.data) {
+        setLoading(false);
+        setUpdated(true);
+      }
+    } catch (err) {
+      setLoading(false);
+      setError(err.response && err.response.data.detail || err.response.data.error);
+    }
+  }
+
   return (
     <JobContext.Provider
       value={{ 
@@ -108,7 +130,8 @@ export const JobProvider = ({ children }) => {
         applyToJob,
         checkJobApplied,
         getTopicStats,
-        newJob
+        newJob,
+        updateJob
       }}
     >
       {children}
