@@ -9,6 +9,7 @@ export const JobProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [updated, setUpdated] = useState(false);
   const [applied, setApplied] = useState(false);
+  const [created, setCreated] = useState(false);
   const [stats, setStats] = useState(null);
 
   const clearErrors = () => {
@@ -70,6 +71,28 @@ export const JobProvider = ({ children }) => {
     }
   }
 
+  const newJob = async ({ data, accessToken }) => {
+    try {
+      setLoading(true);
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/jobs/new/`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        }
+      );
+      if (res.data) {
+        setLoading(false);
+        setCreated(true);
+      }
+    } catch (err) {
+      setLoading(false);
+      setError(err.response && err.response.data.detail || err.response.data.error);
+    }
+  }
+
   return (
     <JobContext.Provider
       value={{ 
@@ -77,12 +100,15 @@ export const JobProvider = ({ children }) => {
         error,
         updated,
         applied,
+        created,
         stats,
         setUpdated,
+        setCreated,
         clearErrors,
         applyToJob,
         checkJobApplied,
-        getTopicStats
+        getTopicStats,
+        newJob
       }}
     >
       {children}
