@@ -5,7 +5,6 @@ import JobsApplied from "../../components/job/JobsApplied";
 import { isAuthenticated } from "../../utils/isAuthenticated";
 
 export default function JobsAppliedPage({ jobs }) {
-  console.log(jobs);
   return (
     <Layout title="Jobbee - My Applied Jobs">
       <JobsApplied jobs={jobs} />

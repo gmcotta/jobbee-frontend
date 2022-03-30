@@ -77,7 +77,6 @@ const UpdateJob = ({ job, accessToken }) => {
       industry,
       experience
     }
-    console.log(data)
     updateJob({ id: job.id, data, accessToken });
   }
 

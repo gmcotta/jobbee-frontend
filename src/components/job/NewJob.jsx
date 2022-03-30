@@ -53,7 +53,6 @@ const NewJob = ({ accessToken }) => {
       industry,
       experience
     }
-    console.log(data)
     newJob({ data, accessToken });
   }
 
