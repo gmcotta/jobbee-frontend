@@ -1,0 +1,47 @@
+import axios from 'axios';
+import cookie from 'cookie';
+
+const daysInSeconds = (days) => 60 * 60 * 24 * days;
+
+const Login = async (req, res) => {
+  if (req.method === 'POST') {
+    const { username, password } = req.body;
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/token/`, 
+        {
+        username, password
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      if (response.data.access) {
+        res.setHeader('Set-Cookie', [
+          cookie.serialize('access', response.data.access, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV !== 'development',
+            maxAge: daysInSeconds(15),
+            sameSite: 'lax',
+            path: '/'
+          })
+        ]);
+        return res.status(200).json({
+          success: true,
+        });
+      } else {
+        res.status(response.status).json({
+          error: 'Authentication failed.'
+        });
+      }
+    } catch (err) {
+      res.status(err.response.status).json({
+        error: err.response && err.response.data.error
+      });
+    }
+  }
+}
+
+export default Login;
