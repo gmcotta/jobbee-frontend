@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -22,6 +23,7 @@ const NewJob = ({ accessToken }) => {
   const [industry, setIndustry] = useState('Business');
   const [experience, setExperience] = useState('No Experience');
 
+  const router = useRouter();
   const { clearErrors, error, loading, created, setCreated, newJob } = useJob();
 
   useEffect(() => {
@@ -32,8 +34,9 @@ const NewJob = ({ accessToken }) => {
     if (created) {
       setCreated(false);
       toast.success('Job created.');
+      router.push('/employer/jobs');
     }
-  }, [error, clearErrors, created, setCreated]);
+  }, [error, clearErrors, created, setCreated, router]);
 
   const submitHandler = evt => {
     evt.preventDefault();
