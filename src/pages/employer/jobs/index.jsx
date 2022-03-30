@@ -1,12 +1,13 @@
 import Layout from "../../../components/layout/Layout";
-import NewJob from "../../../components/job/NewJob";
+import MyJobs from "../../../components/job/MyJobs";
 
 import { isAuthenticated } from "../../../utils/isAuthenticated";
+import axios from "axios";
 
-export default function NewJobPage({ accessToken }) {
+export default function MyJobsPage({ jobs }) {
   return (
-    <Layout title="Jobbee - Post a New Job">
-      <NewJob accessToken={accessToken} />
+    <Layout title="Jobbee - My Jobs">
+      <MyJobs jobs={jobs} />
     </Layout>
   );
 }
@@ -22,9 +23,19 @@ export async function getServerSideProps({ req }) {
       }
     }
   }
+  const res = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/me/jobs/`, 
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    }
+  );
+  const jobs = res.data;
+  console.log(jobs);
   return {
     props: {
-      accessToken
+      jobs,
     }
   }
 }
